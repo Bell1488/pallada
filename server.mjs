@@ -93,7 +93,7 @@ const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8'
 const server=http.createServer(async(req,res)=>{
   try{
     res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');res.setHeader('Cache-Control','no-store');
-    res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru; img-src 'self' data: https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://mc.yandex.ru; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
+    res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://yastatic.net; img-src 'self' data: https://mc.yandex.ru; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://mc.yandex.ru; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
     const route=decodeURIComponent(new URL(req.url,'http://local').pathname);
     if(route==='/api/status.json'&&req.method==='GET')return json(res,200,{mode:'live'});
     if(route==='/api/requests'&&req.method==='POST'){
