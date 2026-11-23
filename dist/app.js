@@ -4,6 +4,7 @@ const all = s => [...document.querySelectorAll(s)];
 const groups = {wallet:['Alipay','WeChat Pay'],purchase:['1688','Taobao','Alibaba'],invoice:['Инвойс поставщика']};
 const services = [...Object.values(groups).flat(),'Доставка груза'];
 const RATE = 12.84, MIN = 5000;
+function metrikaGoal(name){if(typeof window.ym==='function')window.ym(114631425,'reachGoal',name);}
 const format = (n, digits=2) => new Intl.NumberFormat('ru-RU',{maximumFractionDigits:digits}).format(n);
 const money = n => new Intl.NumberFormat('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
 function parseAmount(value){
@@ -83,6 +84,7 @@ all('[data-request]').forEach(button=>button.addEventListener('click',()=>{
   dialogForm.dispatchEvent(new Event('input'));
   renderDialog();
   modal.showModal();
+  metrikaGoal('request_open');
 }));
 $('#close').addEventListener('click',()=>modal.close());
 modal.addEventListener('click',event=>{
@@ -98,7 +100,7 @@ function bindLead(form,inline){
   const status=form.querySelector('[role=status]');
   const contact=form.querySelector(inline?'#calc-contact':'#contact');
   const consent=form.querySelector('[type=checkbox]');
-  let lastBody='',requestId='',pending=false,completed=false;
+  let lastBody='',requestId='',pending=false,completed=false,goalStarted=false;
   function changed(){
     contact.setCustomValidity('');
     if(pending)return;
@@ -107,7 +109,10 @@ function bindLead(form,inline){
     button.textContent='Оставить заявку';
     status.textContent='';
   }
-  form.addEventListener('input',changed);
+  form.addEventListener('input',event=>{
+    changed();
+    if(event.isTrusted&&!goalStarted){goalStarted=true;metrikaGoal('form_start');}
+  });
   if(inline){
     for(const el of [$('#rub'),$('#cny')])el.addEventListener('input',()=>{changed();calcChanged(el);});
     $('#calcservice').addEventListener('change',changed);
@@ -146,6 +151,7 @@ function bindLead(form,inline){
       const data=await reply.json();
       if(!reply.ok||!data.number)throw Error(data.error||'Не удалось получить ответ. Повторите отправку.');
       completed=true;
+      metrikaGoal('lead_submit');
       status.textContent=data.delivered?'Заявка № '+data.number+' доставлена менеджеру в Telegram.':'Заявка № '+data.number+' сохранена. Уведомление в очереди, повторно отправлять заявку не нужно.';
     }catch(error){
       status.textContent=error instanceof TypeError||error.name==='TimeoutError'?'Не удалось получить подтверждение сервера. Повторите отправку с теми же данными.':error.message;
