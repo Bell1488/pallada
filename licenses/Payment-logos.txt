@@ -1,0 +1,3 @@
+Alipay and WeChat Pay are trademarks of their respective owners. Source artwork for payment-method identification, cropped and rasterized for the interface:
+https://checkoutshopper-live.adyen.com/checkoutshopper/images/logos/alipay.svg
+https://checkoutshopper-live.adyen.com/checkoutshopper/images/logos/wechatpay.svg

@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /api/
+Disallow: /manager
+Sitemap: https://pallada.cc/sitemap.xml

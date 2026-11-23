@@ -1,0 +1,21 @@
+[Unit]
+Description=Pallada website and Telegram notifications
+After=network-online.target
+Wants=network-online.target
+[Service]
+User=pallada
+Group=pallada
+WorkingDirectory=/opt/pallada
+ExecStart=/usr/bin/env node /opt/pallada/server.mjs
+EnvironmentFile=/etc/pallada.env
+StateDirectory=pallada
+StateDirectoryMode=0700
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+UMask=0077
+[Install]
+WantedBy=multi-user.target
