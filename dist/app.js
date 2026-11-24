@@ -20,6 +20,14 @@ function calcChanged(source){
   const valid=Number.isFinite(r)&&r>=MIN&&r<=999999999;
   $('#calc-request').disabled=!valid;
   $('#calcerror').textContent=valid?'':r>999999999?'Для расчёта укажите сумму до 999 999 999 ₽.':'Минимальная сумма заявки — 5 000 ₽.';
+  updateTelegramLink();
+}
+function updateTelegramLink(){
+  const link=$('#calc-telegram'), rub=parseAmount($('#rub')?.value), cny=parseAmount($('#cny')?.value);
+  if(!link)return;
+  const amount=Number.isFinite(rub)?format(rub,2)+' ₽'+(Number.isFinite(cny)?' ('+format(cny,2)+' CNY)':''):'сумма не указана';
+  const message='Здравствуйте! Хочу получить расчёт.\nНаправление: Россия → Китай.\nУслуга: '+($('#calcservice')?.value||'не выбрана')+'.\nСумма: '+amount+'.';
+  link.href='https://t.me/pallada_cny?text='+encodeURIComponent(message);
 }
 function setGlyph(){
   const service = $('#calcservice').value;
@@ -42,10 +50,11 @@ if($('#calculator')){
     options($('#calcservice'),groups[b.dataset.group]);setGlyph();
   }));
   $('#calcservice').addEventListener('change',setGlyph);
+  $('#calcservice').addEventListener('change',updateTelegramLink);
   [$('#rub'),$('#cny')].forEach(el=>{
     el.addEventListener('input',()=>calcChanged(el));
     el.addEventListener('blur',()=>{const n=parseAmount(el.value);if(Number.isFinite(n))el.value=format(n);});
-  });calcChanged($('#rub'));
+  });calcChanged($('#rub'));updateTelegramLink();
 }
 const menu=$('#menu');
 menu.addEventListener('click',()=>{const state=$('#nav').classList.toggle('open');menu.setAttribute('aria-expanded',state);menu.setAttribute('aria-label',state?'Закрыть меню':'Открыть меню')});

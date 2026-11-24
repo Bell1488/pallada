@@ -16,3 +16,5 @@ dialog{border:1px solid var(--line);border-radius:18px;background:var(--card);wi
 .payicon img{display:block;width:25px;height:25px;border-radius:5px}
 .cardpic .wallet-badge{display:inline-flex;align-items:center;gap:4px}
 .cardpic .wallet-badge img{width:16px;height:16px;border-radius:3px;transform:none}
+
+.calculator .telegram-cta{display:block;margin-top:0;text-align:center;text-decoration:none;background:#248b58}.calculator .telegram-cta:hover{background:#1d754a}
