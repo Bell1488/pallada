@@ -12,12 +12,14 @@ function parseAmount(value){
   return /^\d{1,12}(?:\.\d{0,2})?$/.test(s) ? Number(s) : NaN;
 }
 function options(select,values){select.replaceChildren(...values.map(t=>new Option(t,t)));}
+const calculatorService=()=>$('#calcservice :checked').value;
+const validLeadAmount=amount=>Number.isFinite(amount)&&amount>=MIN&&amount<=999999999;
 function calcChanged(source){
   const rub=$('#rub'), cny=$('#cny'), byRub=source===rub;
   const n=parseAmount(source.value);
   (byRub?cny:rub).value = Number.isFinite(n)&&n>0 ? money(byRub?n/RATE:n*RATE) : '';
   const r=parseAmount(rub.value);
-  const valid=Number.isFinite(r)&&r>=MIN&&r<=999999999;
+  const valid=validLeadAmount(r);
   $('#calc-request').disabled=!valid;
   $('#calcerror').textContent=valid?'':r>999999999?'Для расчёта укажите сумму до 999 999 999 ₽.':'Минимальная сумма заявки — 5 000 ₽.';
   updateTelegramLink();
@@ -26,35 +28,15 @@ function updateTelegramLink(){
   const link=$('#calc-telegram'), rub=parseAmount($('#rub')?.value), cny=parseAmount($('#cny')?.value);
   if(!link)return;
   const amount=Number.isFinite(rub)?format(rub,2)+' ₽'+(Number.isFinite(cny)?' ('+format(cny,2)+' CNY)':''):'сумма не указана';
-  const message='Здравствуйте! Хочу получить расчёт.\nНаправление: Россия → Китай.\nУслуга: '+($('#calcservice')?.value||'не выбрана')+'.\nСумма: '+amount+'.';
+  const message='Здравствуйте! Хочу получить расчёт.\nНаправление: Россия → Китай.\nУслуга: '+calculatorService()+'.\nСумма: '+amount+'.';
   link.href='https://t.me/pallada_cny?text='+encodeURIComponent(message);
 }
-function setGlyph(){
-  const service = $('#calcservice').value;
-  const icon = $('#payicon');
-  const walletImages = {'Alipay':'alipay.png','WeChat Pay':'wechatpay.png'};
-  if(walletImages[service]){
-    const image = new Image(25,25);
-    image.src = '/assets/'+walletImages[service];
-    image.alt = '';
-    icon.replaceChildren(image);
-    icon.style.backgroundColor = 'transparent';
-    return;
-  }
-  const glyph = {'1688':['淘','#be5526'],'Taobao':['淘','#be5526'],'Alibaba':['A','#b45921'],'Инвойс поставщика':['¥','#566753']};
-  const [s,bg]=glyph[$('#calcservice').value];$('#payicon').textContent=s;$('#payicon').style.backgroundColor=bg;
-}
 if($('#calculator')){
-  all('[data-group]').forEach(b=>b.addEventListener('click',()=>{
-    all('[data-group]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
-    options($('#calcservice'),groups[b.dataset.group]);setGlyph();
-  }));
-  $('#calcservice').addEventListener('change',setGlyph);
   $('#calcservice').addEventListener('change',updateTelegramLink);
   [$('#rub'),$('#cny')].forEach(el=>{
     el.addEventListener('input',()=>calcChanged(el));
     el.addEventListener('blur',()=>{const n=parseAmount(el.value);if(Number.isFinite(n))el.value=format(n);});
-  });calcChanged($('#rub'));updateTelegramLink();
+  });calcChanged($('#rub'));
 }
 const menu=$('#menu');
 menu.addEventListener('click',()=>{const state=$('#nav').classList.toggle('open');menu.setAttribute('aria-expanded',state);menu.setAttribute('aria-label',state?'Закрыть меню':'Открыть меню')});
@@ -114,7 +96,7 @@ function bindLead(form,inline){
     contact.setCustomValidity('');
     if(pending)return;
     completed=false;
-    button.disabled=false;
+    button.disabled=inline&&!validLeadAmount(parseAmount($('#rub').value));
     button.textContent='Оставить заявку';
     status.textContent='';
   }
@@ -125,15 +107,14 @@ function bindLead(form,inline){
   if(inline){
     for(const el of [$('#rub'),$('#cny')])el.addEventListener('input',()=>{changed();calcChanged(el);});
     $('#calcservice').addEventListener('change',changed);
-    all('[data-group]').forEach(el=>el.addEventListener('click',changed));
   }
   form.addEventListener('submit',async event=>{
     event.preventDefault();
     if(pending||completed)return;
-    const service=inline?$('#calcservice').value:$('#leadservice').value;
+    const service=inline?calculatorService():$('#leadservice').value;
     const cargo=service==='Доставка груза';
     const amount=parseAmount(inline?$('#rub').value:$('#leadamount').value);
-    if(!cargo&&(!Number.isFinite(amount)||amount<MIN||amount>999999999)){
+    if(!cargo&&!validLeadAmount(amount)){
       status.textContent='Укажите сумму от 5 000 до 999 999 999 ₽.';return;
     }
     const value=contact.value.trim();
