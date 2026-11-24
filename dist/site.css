@@ -348,3 +348,114 @@ body{font-size:14px}
   .svc-body .home-tag{font-size:9px}
 }
 @media(max-width:420px){.trust-points,.company-card dl{grid-template-columns:minmax(0,1fr)}}
+/* First screen copy, matched to the reference layout. */
+.hero{grid-template-columns:minmax(0,500px) minmax(320px,390px);justify-content:space-between;gap:35px;padding-top:45px;padding-bottom:28px}
+.scene{position:relative;display:block}
+.scene-copy{position:relative;padding:7px 0 0}
+.hero-eyebrow{display:flex;align-items:center;gap:9px;margin:0;font-size:10px;font-weight:550;letter-spacing:.09em;text-transform:uppercase;color:#788273}
+.hero-eyebrow span{font-size:16px;letter-spacing:0}
+.scene h1{position:relative;margin:25px 0 0;font-size:58px;font-weight:550;line-height:1.04;letter-spacing:-.06em;color:#202d28}
+.scene h1 span{color:#7c887c}
+.hero-star{position:absolute;top:6px;right:0;font-size:56px;font-style:normal;font-weight:400;line-height:.7;color:#365942}
+.hero-desc{max-width:44ch;margin:25px 0 0;font-size:13px;line-height:1.7;color:#687368}
+.hero-pills{display:flex;flex-wrap:wrap;gap:9px 14px;margin:20px 0 0;padding:0;list-style:none;font-size:11px;color:#5e6a60}
+.hero-pills li{display:flex;align-items:center;gap:5px}
+.hero-pills svg{width:14px;height:14px;fill:none;stroke:#48744b;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hero-route{position:relative;z-index:1;display:flex;align-items:center;gap:9px;margin-top:33px;font-size:11px;font-weight:600;color:#202d28}
+.hero-route span{display:flex;align-items:center;gap:8px;letter-spacing:1px;color:#99a893}
+.hero-route svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hero-route small{margin-left:6px;font-size:10px;font-weight:400;color:#8b9488}
+.hero-skyline{position:absolute;z-index:0;left:0;top:362px;width:100%;height:180px;opacity:.22;color:#799577}
+.scene-benefits,.hero-photo,.heroimg{display:none}
+@media(max-width:1050px){.hero{grid-template-columns:minmax(0,1fr) minmax(300px,390px);gap:28px}.scene h1{font-size:clamp(40px,5vw,54px)}}
+@media(max-width:700px){
+  .hero{grid-template-columns:minmax(0,1fr);gap:20px;padding-top:24px}
+  .scene h1{margin-top:18px;font-size:clamp(34px,10vw,44px)}
+  .hero-star{font-size:40px}
+  .hero-desc{margin-top:16px}
+  .hero-route{margin-top:22px}
+  .hero-route small{display:none}
+  .hero-skyline{position:relative;top:auto;height:auto;margin-top:-6px}
+}
+/* Payment calculator, measured from the reference card. Isolated under .xc to override older rules. */
+@font-face{font-family:'Golos Text';font-weight:400 900;font-display:swap;src:url('/assets/golos-cyrillic.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Golos Text';font-weight:400 900;font-display:swap;src:url('/assets/golos-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Golos Text';font-weight:400 900;font-display:swap;src:url('/assets/golos-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+.hero .xc{
+  align-self:start;width:100%;max-width:390px;padding:23px;overflow:visible;
+  border:1px solid #e1e6dc;border-radius:20px;background:#fff;box-shadow:0 12px 40px #26382608;
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  font:400 14px/1.5 'Golos Text',Arial,sans-serif;color:#202d28;
+}
+.xc svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.xc .xc-head{display:flex;align-items:center;gap:10px;margin:0 0 23px}
+.xc .xc-dot{display:grid;place-items:center;flex:none;width:27px;height:27px;border:1px solid #dce4d5;border-radius:50%;color:#214f3d;font-size:18px;line-height:1}
+.xc .xc-head h2{flex:1;margin:0;font-size:17px;font-weight:550;line-height:1.13;letter-spacing:-.04em}
+.xc .xc-tag{padding:4px 6px;border-radius:4px;background:#f1f4ed;color:#8c9686;font-size:8px;line-height:12px;letter-spacing:.07em;text-transform:uppercase}
+
+.xc .xc-tabs{display:flex;gap:2px;min-inline-size:0;margin:0 0 22px;padding:0;border:0;border-bottom:1px solid #e0e5dc}
+.xc .xc-tabs label{position:relative;flex:1;min-width:0;cursor:pointer}
+.xc .xc-tabs input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.xc .xc-tabs span{display:block;position:relative;padding:0 6px 13px;border:0;font-size:11px;line-height:16.5px;text-align:center;white-space:nowrap;color:#828a80}
+.xc .xc-tabs input:checked+span{color:#214f3d;font-weight:550}
+.xc .xc-tabs input:checked+span::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#30583d}
+.xc .xc-tabs input:focus-visible+span{outline:2px solid #214f3d;outline-offset:2px;border-radius:3px}
+
+.xc .xc-field{display:block;min-height:0;padding:14px 16px;border:1px solid #e8ebe3;border-radius:10px;background:#f6f7f3}
+.xc .xc-receive{border-color:#e0e9d4;background:#f0f5e8}
+.xc .xc-field>label{display:inline;font-size:10px;line-height:15px;color:#7e8778}
+.xc .xc-field>div{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:7px}
+.xc .xc-field input{width:100%;min-width:0;height:43.5px;padding:0;border:0;background:transparent;font:500 29px/43.5px 'Golos Text',Arial,sans-serif;letter-spacing:-.04em;color:#202d28}
+.xc .xc-field input:focus-visible{outline:none}
+.xc .xc-field:focus-within{border-color:#b9c9b2}
+.xc .xc-cur{display:flex;align-items:center;gap:7px;flex:none;font-size:12px;font-weight:550;line-height:18px}
+.xc .xc-cur>span{display:grid;place-items:center;width:24px;height:24px;border:1px solid #e2e7dc;border-radius:50%;background:#fff;color:#506742;font-size:16px;font-weight:400;line-height:1}
+
+.xc .xc-middle{display:flex;align-items:center;justify-content:space-between;margin:8px 12px;font-size:9px;line-height:13.5px;color:#8b9387}
+.xc .xc-middle>span:first-child{display:flex;align-items:center;gap:5px}
+.xc .xc-middle>span:first-child svg{width:12px;height:12px}
+.xc .xc-swap{display:grid;place-items:center;width:29px;height:29px;border:1px solid #e0e5d9;border-radius:50%;background:#fff}
+.xc .xc-swap svg{width:15px;height:15px}
+
+.xc #calcerror,.xc #calcerror:empty{display:block;min-height:13.5px;margin:13px 0 17px;font-size:9px;line-height:13.5px;color:#727b74}
+.xc .xc-note:empty::before{content:"Минимальная сумма платежа — 5 000 ₽"}
+.xc #calcerror:not(:empty){color:#a33a26}
+
+.xc .xc-form{display:block;margin:14px 0 0}
+.xc .xc-contact{display:block;font-size:10px;font-weight:400;line-height:15px;color:#6d7d62}
+.xc .xc-contact input{display:block;width:100%;min-height:45px;margin:8px 0 0;padding:13px;border:1px solid #dce4d3;border-radius:8px;background:#fafbf7;font:400 13px/19.5px 'Golos Text',Arial,sans-serif;color:#304a35}
+.xc .xc-contact input::placeholder{font-size:13px;color:#9aa595;opacity:1}
+.xc .xc-consent{display:flex;align-items:flex-start;gap:8px;margin:12px 0 16px;font-size:8px;line-height:13.2px;color:#8c9a80}
+.xc .xc-consent input{flex:none;width:16px;height:16px;margin:2px 0 0;accent-color:#214f3d}
+.xc .xc-consent a{color:#6c8558}
+
+.xc .xc-btn{
+  position:static;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  width:100%;min-height:49px;margin:0;padding:13px 22px;border:0;border-radius:9px;
+  background:#214f3d;color:#fff;font:500 13px/19.5px 'Golos Text',Arial,sans-serif;letter-spacing:-.02em;text-align:left;text-decoration:none;
+}
+.xc .xc-btn::before,.xc .xc-btn::after{content:none}
+.xc .xc-btn svg{flex:none;width:18px;height:18px}
+.xc .xc-btn:hover{background:#1a4031}
+.xc .xc-btn:disabled{background:#8e9a90;cursor:not-allowed}
+.xc .xc-tg{gap:8px;margin-top:9px;padding:11px 16px;border:1px solid #d8e6ea;border-radius:8px;background:#eef5f7;color:#285d70}
+.xc .xc-tg:hover{background:#e3eff2}
+.xc .xc-tg span{flex:1;text-align:center}
+.xc .xc-tg svg{width:16px;height:16px;color:#327996}
+.xc .form-status{margin:10px 0 0;font-size:11px}
+
+.xc .xc-disclaimer{display:flex;align-items:flex-start;justify-content:center;gap:7px;margin:14px 10px 0;font-size:8px;line-height:12px;text-align:center;color:#9aa18f}
+.xc .xc-disclaimer svg{flex:none;width:13px;height:13px;margin-top:1px}
+
+@media(max-width:700px){
+  .hero .xc{max-width:none;padding:20px}
+  .xc .xc-tabs span{padding-inline:2px;font-size:11px}
+  .xc .xc-field input{font-size:26px}
+  .xc .xc-contact input,.xc .xc-contact input::placeholder{font-size:16px}
+  .xc .xc-consent{font-size:10px}
+  .xc .xc-note,.xc .xc-middle{font-size:10px}
+  .xc .xc-disclaimer{font-size:9px}
+}
+@media(max-width:360px){.xc .xc-btn{padding-inline:14px}.xc .xc-tg{gap:6px;padding-inline:10px;font-size:12px}.xc .xc-tg span{white-space:nowrap}}

@@ -88,6 +88,7 @@ $('#leadamount').addEventListener('input',renderDialog);
 
 function bindLead(form,inline){
   const button=form.querySelector('button[type=submit],button.primary');
+  const label=button.querySelector('.btn-label')||button;
   const status=form.querySelector('[role=status]');
   const contact=form.querySelector(inline?'#calc-contact':'#contact');
   const consent=form.querySelector('[type=checkbox]');
@@ -97,7 +98,7 @@ function bindLead(form,inline){
     if(pending)return;
     completed=false;
     button.disabled=inline&&!validLeadAmount(parseAmount($('#rub').value));
-    button.textContent='Оставить заявку';
+    label.textContent='Оставить заявку';
     status.textContent='';
   }
   form.addEventListener('input',event=>{
@@ -130,7 +131,7 @@ function bindLead(form,inline){
     const controls=inline?all('#calculator input,#calculator select,#calculator button'):Array.from(form.elements);
     const previouslyDisabled=controls.map(el=>el.disabled);
     controls.forEach(el=>el.disabled=true);
-    button.textContent='Отправляем…';status.textContent='';
+    label.textContent='Отправляем…';status.textContent='';
     try{
       const mode=await fetch('/api/status.json',{cache:'no-store',signal:AbortSignal.timeout(6000)});
       if(!mode.ok)throw Error('Сервер временно недоступен. Повторите отправку позже.');
@@ -148,7 +149,7 @@ function bindLead(form,inline){
     }finally{
       controls.forEach((el,i)=>el.disabled=previouslyDisabled[i]);
       pending=false;form.dataset.pending='false';button.disabled=completed;
-      button.textContent=completed?'Заявка принята':'Оставить заявку';
+      label.textContent=completed?'Заявка принята':'Оставить заявку';
     }
   });
 }
