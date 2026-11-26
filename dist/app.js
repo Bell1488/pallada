@@ -4,17 +4,10 @@ const all = s => [...document.querySelectorAll(s)];
 const groups = {wallet:['Alipay','WeChat Pay'],purchase:['1688','Taobao','Alibaba'],invoice:['Инвойс поставщика']};
 const services = [...Object.values(groups).flat(),'Доставка груза'];
 const RATE = 12.84, MIN = 5000;
-const BF_END = Date.UTC(2026,10,30,20,59), BF_MIN = 20000, BF_RATE = 0.10;
-const bfActive = () => Date.now() < BF_END;
-(function(){
-  const bar=$('#bf-bar');
-  if(!bar)return;
-  const closed = () => { try { return localStorage.getItem('bf26-closed')==='1'; } catch(e){ return false; } };
-  const hide = () => bar.remove();
-  if(!bfActive() || closed()) hide();
-  const btn=$('#bf-bar-close');
-  if(btn)btn.addEventListener('click',()=>{ try{ localStorage.setItem('bf26-closed','1'); }catch(e){} hide(); });
-})();
+const BF_START = Date.parse('2026-11-26T00:00:00+03:00');
+const BF_END = Date.parse('2026-12-01T00:00:00+03:00');
+const BF_MIN = 20000, BF_PERCENT = 5;
+const bfActive = (now=Date.now()) => now>=BF_START && now<BF_END;
 function metrikaGoal(name){if(typeof window.ym==='function')window.ym(114631425,'reachGoal',name);}
 const format = (n, digits=2) => new Intl.NumberFormat('ru-RU',{maximumFractionDigits:digits}).format(n);
 const money = n => new Intl.NumberFormat('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
@@ -25,6 +18,8 @@ function parseAmount(value){
 function options(select,values){select.replaceChildren(...values.map(t=>new Option(t,t)));}
 const calculatorService=()=>$('#calcservice :checked').value;
 const validLeadAmount=amount=>Number.isFinite(amount)&&amount>=MIN&&amount<=999999999;
+const bfEligible=(rub,cny)=>bfActive()&&validLeadAmount(rub)&&rub>=BF_MIN&&Number.isFinite(cny);
+const bfBonusText=cny=>'+'+money(cny*BF_PERCENT/100)+'\u00a0CNY';
 function calcChanged(source){
   const rub=$('#rub'), cny=$('#cny'), byRub=source===rub;
   const n=parseAmount(source.value);
@@ -36,9 +31,12 @@ function calcChanged(source){
   const bonus=$('#calc-bonus');
   if(bonus){
     const cnyVal=parseAmount($('#cny').value);
-    const show=bfActive()&&Number.isFinite(r)&&r>=BF_MIN&&Number.isFinite(cnyVal);
+    const show=bfEligible(r,cnyVal);
     bonus.hidden=!show;
-    if(show)bonus.textContent='🎁 Бонус по акции: +'+money(cnyVal*BF_RATE)+' CNY';
+    if(show){
+      const value=$('#calc-bonus-value'), text=bfBonusText(cnyVal);
+      if(value.textContent!==text)value.textContent=text;
+    }
   }
   updateTelegramLink();
 }
@@ -46,11 +44,19 @@ function updateTelegramLink(){
   const link=$('#calc-telegram'), rub=parseAmount($('#rub')?.value), cny=parseAmount($('#cny')?.value);
   if(!link)return;
   const amount=Number.isFinite(rub)?format(rub,2)+' ₽'+(Number.isFinite(cny)?' ('+format(cny,2)+' CNY)':''):'сумма не указана';
-  const bf=bfActive()&&Number.isFinite(rub)&&rub>=BF_MIN&&Number.isFinite(cny)?'\nАкция «Чёрная пятница»: бонус +'+money(cny*BF_RATE)+' CNY к пополнению.':'';
+  const bf=bfEligible(rub,cny)?'\nАкция «Чёрная пятница»: бонус '+bfBonusText(cny)+' к пополнению.':'';
   const message='Здравствуйте! Хочу получить расчёт.\nНаправление: Россия → Китай.\nУслуга: '+calculatorService()+'.\nСумма: '+amount+'.'+bf;
   link.href='https://t.me/pallada_cny?text='+encodeURIComponent(message);
 }
 if($('#calculator')){
+  const promo=$('#hero-promo');
+  all('[data-bf-percent]').forEach(el=>{el.textContent='+'+BF_PERCENT+'%';});
+  if(promo)promo.hidden=!bfActive();
+  $('#promo-calculate')?.addEventListener('click',event=>{
+    event.preventDefault();
+    $('#rub').focus({preventScroll:true});
+    $('#rub').scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  });
   $('#calcservice').addEventListener('change',updateTelegramLink);
   [$('#rub'),$('#cny')].forEach(el=>{
     el.addEventListener('input',()=>calcChanged(el));
